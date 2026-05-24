@@ -1,0 +1,24 @@
+# Запуск только PostgreSQL в Docker (если Docker установлен, а полный стек не нужен)
+# Использование: docker compose -f docker-compose.db.yml up -d
+
+name: work-journal-db
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: work_journal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d work_journal"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
